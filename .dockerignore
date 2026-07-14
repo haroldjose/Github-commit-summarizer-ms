@@ -1,0 +1,7 @@
+.git
+training/data
+training/notebooks
+docs
+tests
+__pycache__
+*.zip

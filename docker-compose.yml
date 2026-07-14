@@ -1,0 +1,10 @@
+services:
+  commit-summarizer-ms:
+    build: .
+    ports:
+      - "8096:8096"
+    environment:
+      - APP_SECURITY_OAUTH2_ENABLED=${APP_SECURITY_OAUTH2_ENABLED:-false}
+      - JWT_ISSUER_URI=${JWT_ISSUER_URI:-http://localhost:8080/realms/Github}
+      - JWT_JWK_SET_URI=${JWT_JWK_SET_URI:-http://localhost:8080/realms/Github/protocol/openid-connect/certs}
+    restart: unless-stopped

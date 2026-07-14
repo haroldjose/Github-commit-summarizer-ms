@@ -1,0 +1,6 @@
+training/data/
+*.zip
+__pycache__/
+.ipynb_checkpoints/
+.env
+kaggle.json

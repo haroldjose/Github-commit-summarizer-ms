@@ -1,0 +1,71 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: github/commit-summarizer-ms
+  ECS_CLUSTER: github-ecs
+  SERVICE_MATCH: CommitSummarizer
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          pip install torch~=2.6 --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Pruebas
+        run: pytest tests -q
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    # OIDC: GitHub emite un token que AWS verifica contra el rol de despliegue.
+    # No hay credenciales guardadas en GitHub (el ARN del rol no es secreto).
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Credenciales AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login a ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build y push de la imagen (modelo incluido)
+        run: |
+          IMAGE="${{ steps.ecr.outputs.registry }}/${ECR_REPOSITORY}"
+          docker build -t "$IMAGE:${{ github.sha }}" -t "$IMAGE:latest" .
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"
+
+      - name: Redesplegar en ECS (si el entorno esta encendido)
+        run: |
+          SERVICE=$(aws ecs list-services --cluster "$ECS_CLUSTER" \
+            --query "serviceArns[?contains(@, '${SERVICE_MATCH}')]" --output text 2>/dev/null || true)
+          if [ -n "$SERVICE" ]; then
+            aws ecs update-service --cluster "$ECS_CLUSTER" --service "$SERVICE" \
+              --force-new-deployment --query "service.serviceName" --output text
+            echo "Servicio reciclado con la imagen nueva."
+          else
+            echo "Cluster/servicio no disponible (entorno apagado): la imagen queda publicada en ECR y se usara en el proximo cdk deploy."
+          fi

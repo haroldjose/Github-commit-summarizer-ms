@@ -1,0 +1,17 @@
+{
+  "arquitectura": "seq2seq GRU bidireccional + atencion Luong (desde cero)",
+  "bleu4_test": 6.68,
+  "rougeL_test": 0.2092,
+  "torch_version": "2.11.0+cu128",
+  "dataset": "github:Tbabm/nngen (corpus de Jiang et al. 2017, limpiado por Liu et al. 2018)",
+  "seed": 42,
+  "contrato_inferencia": {
+    "entrada": {
+      "diff": "string (salida de git diff, texto plano)"
+    },
+    "preproceso": "tokenizacion por espacios, truncado a 100 tokens",
+    "salida": {
+      "resumen": "string en ingles, max 25 tokens"
+    }
+  }
+}
