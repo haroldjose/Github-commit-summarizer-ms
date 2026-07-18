@@ -1,0 +1,19 @@
+{
+  "arquitectura": "pointer-generator multilenguaje (desde cero)",
+  "corpus": "Java: NNGen 22k | Python/JS/C++/C#: MCMD (RACE) 30k c/u, semilla 42",
+  "bleu4_test_global": 11.79,
+  "bleu4_test_por_lenguaje": {
+    "cpp": 11.82,
+    "csharp": 12.72,
+    "java": 9.52,
+    "javascript": 12.19,
+    "python": 11.83
+  },
+  "val_loss": 3.5644,
+  "epocas": 5,
+  "torch_version": "2.12.1+cpu",
+  "seed": 42,
+  "baseline_java_ptrgen_v1": {
+    "bleu4_test": 11.62
+  }
+}

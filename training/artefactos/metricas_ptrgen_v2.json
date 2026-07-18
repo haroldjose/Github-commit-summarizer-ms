@@ -1,0 +1,18 @@
+{
+  "arquitectura": "pointer-generator (See et al. 2017), biGRU + Luong, desde cero",
+  "poda": "estricta (cabeceras + lineas +/-, sin contexto; igual que el servicio)",
+  "bleu4_test": 10.97,
+  "rougeL_test": 0.2909,
+  "val_loss": 3.5702,
+  "epocas": 6,
+  "torch_version": "2.12.1+cpu",
+  "seed": 42,
+  "baseline_fase1": {
+    "bleu4_test": 6.68,
+    "rougeL_test": 0.2092
+  },
+  "baseline_ptrgen_v1": {
+    "bleu4_test": 11.62,
+    "rougeL_test": 0.2927
+  }
+}
