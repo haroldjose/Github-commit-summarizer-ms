@@ -101,11 +101,14 @@ memoria del propio corpus de entrenamiento.
 
 Política del servicio (en orden):
 
-1. **Recuperación** si coseno ≥ 0.5 **y** BLEU-4 entre diffs ≥ 0.5.
+1. **Heurística SE** (línea ChangeScribe): plantillas compuestas para archivo
+   nuevo/borrado, bump de versión, métodos nuevos (Java/Python/JS), null
+   check e imports. Van primero porque extraen valores del **propio** diff
+   (siempre verificables); un vecino recuperado casi idéntico en estructura
+   puede traer detalles ajenos (otra versión, otro artefacto).
+2. **Recuperación** si coseno ≥ 0.5 **y** BLEU-4 entre diffs ≥ 0.5.
    El coseno solo no basta: se infla con tokens estructurales (`mmm`/`ppp`/`<nl>`)
    en diffs fuera de distribución y devolvía mensajes irrelevantes.
-2. **Heurística SE** (línea ChangeScribe): plantillas para bump de versión,
-   método nuevo (`Add X method`), null check y función tocada (`Update X`).
 3. **Generativo** (pointer-generator de la Fase 3, o el seq2seq base si no
    está su checkpoint) con beam search, no-repeat bigram, longitud mínima y
    detokenizador. Si la salida es degenerada (`Fix #`), se descarta.

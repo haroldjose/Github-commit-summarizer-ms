@@ -379,7 +379,16 @@ class SummarizerService:
     def resumir(self, diff: str, beam: int = 5) -> str:
         normalizado = normalizar_diff(diff)
 
-        # 1) Recuperación NNGen: solo si el vecino es realmente parecido
+        # 1) Heurística SE (ChangeScribe-like): patrones inequívocos con
+        #    valores extraídos del PROPIO diff — siempre verificables. Van
+        #    antes que la recuperación porque un vecino casi idéntico en
+        #    estructura puede traer detalles ajenos (otra versión, otro
+        #    artefacto) y "mentir" con confianza.
+        plantilla = heuristica_diff(normalizado)
+        if plantilla:
+            return plantilla
+
+        # 2) Recuperación NNGen: solo si el vecino es realmente parecido
         #    (coseno + BLEU entre diffs). Si no, el mensaje recuperado miente.
         vecino_msg, vecino_cos, vecino_bleu = "", 0.0, 0.0
         if self.recuperador is not None:
@@ -390,12 +399,6 @@ class SummarizerService:
                     and vecino_bleu >= self.UMBRAL_BLEU
                     and vecino_msg):
                 return detokenizar(vecino_msg)
-
-        # 2) Heurística SE (ChangeScribe-like): patrones claros del diff
-        #    (método nuevo, bump de versión, null check) sin red neuronal.
-        plantilla = heuristica_diff(normalizado)
-        if plantilla:
-            return plantilla
 
         # 3) Fallback generativo: el modelo entrenado desde cero.
         texto = self._generar(normalizado, beam)
