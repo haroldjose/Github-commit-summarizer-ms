@@ -7,10 +7,6 @@ kaggle.json
 
 # experimento descartado (documentado en ENTRENAMIENTO.md)
 training/artefactos/modelo_resumidor_ptrgen_v2.pt
-# >100 MB (limite de GitHub); se regenera con train_multilang.py (semilla 42)
+# >100 MB (limite de GitHub): viaja partido en .part-* y el Dockerfile lo
+# reensambla; el archivo completo solo existe localmente
 training/artefactos_v3/modelo_resumidor_ptrgen.pt
-# corpus de recuperacion: contienen secretos historicos de terceros filtrados
-# en los diffs del dataset (los detecta el push protection de GitHub).
-# Se regeneran: java <- github.com/Tbabm/nngen ; v3 <- prepara_multilang.py
-training/artefactos/corpus_train.*
-training/artefactos_v3/corpus_train.*

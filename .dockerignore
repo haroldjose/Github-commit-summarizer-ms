@@ -1,6 +1,8 @@
 .git
 training/data
 training/notebooks
+# artefactos v1 (solo-Java): la imagen usa training/artefactos_v3
+training/artefactos
 docs
 tests
 __pycache__

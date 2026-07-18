@@ -12,8 +12,12 @@ RUN pip install --no-cache-dir torch~=2.6 --index-url https://download.pytorch.o
     && pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
-# Modelo versionado junto con la imagen (MLOps basico)
-COPY training/artefactos ./models
+# Modelo multilenguaje v3 versionado junto con la imagen (MLOps basico):
+# vocabularios + corpus de recuperacion + checkpoint partido en .part-*
+# (GitHub no acepta archivos >100 MB) que se reensambla aqui.
+COPY training/artefactos_v3 ./models
+RUN cat ./models/modelo_resumidor_ptrgen.pt.part-* > ./models/modelo_resumidor_ptrgen.pt \
+    && rm ./models/modelo_resumidor_ptrgen.pt.part-*
 
 RUN useradd --system --uid 1001 appuser
 USER appuser
