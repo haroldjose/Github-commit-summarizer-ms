@@ -4,4 +4,6 @@ pydantic-settings~=2.7
 # torch CPU: en el Dockerfile se instala desde el indice CPU de PyTorch
 # (imagen mucho mas liviana que la version con CUDA)
 torch~=2.6
+# indice invertido de la recuperacion NNGen (torch no lo instala por si solo)
+numpy~=2.1
 PyJWT[crypto]~=2.10
