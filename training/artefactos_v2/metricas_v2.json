@@ -1,0 +1,13 @@
+{
+  "arquitectura": "Transformer 4+4 capas, d_model 256, SentencePiece 16k compartido, desde cero",
+  "datasets": [
+    "github:Tbabm/nngen",
+    "hf:JetBrains-Research/commit-chronicle (ASE 2023, muestra ~300k; reemplaza a CommitBERT cuyos enlaces estan caidos)"
+  ],
+  "train_final": 186053,
+  "bleu4_test": 4.81,
+  "rougeL_test": 0.2236,
+  "torch": "2.11.0+cu128",
+  "seed": 42,
+  "nota_protocolo": "test = NNGen integro; BLEU 13a sobre texto detokenizado"
+}

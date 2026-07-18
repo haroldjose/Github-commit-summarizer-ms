@@ -25,7 +25,14 @@ servicio: SummarizerService | None = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global servicio
-    servicio = SummarizerService(get_settings().models_dir)
+    settings = get_settings()
+    if settings.model_version.lower() == "v2":
+        from app.services.summarizer_v2_service import SummarizerV2Service
+        servicio = SummarizerV2Service(settings.models_v2_dir)
+        log.info("MODEL_VERSION=v2 (Transformer + SentencePiece)")
+    else:
+        servicio = SummarizerService(settings.models_dir)
+        log.info("MODEL_VERSION=v1 (GRU + atencion)")
     yield
 
 

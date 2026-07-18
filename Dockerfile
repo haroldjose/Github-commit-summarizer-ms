@@ -12,8 +12,10 @@ RUN pip install --no-cache-dir torch~=2.6 --index-url https://download.pytorch.o
     && pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
-# Modelo versionado junto con la imagen (MLOps basico)
+# Modelos versionados junto con la imagen (MLOps basico)
+# v1 (produccion, default) y v2 (experimental, MODEL_VERSION=v2)
 COPY training/artefactos ./models
+COPY training/artefactos_v2 ./models_v2
 
 RUN useradd --system --uid 1001 appuser
 USER appuser

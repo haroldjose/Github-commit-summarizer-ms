@@ -4,4 +4,5 @@ pydantic-settings~=2.7
 # torch CPU: en el Dockerfile se instala desde el indice CPU de PyTorch
 # (imagen mucho mas liviana que la version con CUDA)
 torch~=2.6
+sentencepiece~=0.2
 PyJWT[crypto]~=2.10

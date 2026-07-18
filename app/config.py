@@ -21,6 +21,9 @@ class Settings(BaseSettings):
 
     # Artefactos de los modelos (Prompt 1)
     models_dir: str = "models"
+    # v1 = GRU+atencion (produccion) | v2 = Transformer+SentencePiece (experimental)
+    model_version: str = "v1"
+    models_v2_dir: str = "models_v2"
 
     class Config:
         env_file = ".env"
